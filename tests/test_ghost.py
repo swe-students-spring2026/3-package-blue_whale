@@ -1,0 +1,63 @@
+import pytest
+from ghosty import ghosty
+
+class TestAssign:
+    def setup_method(self):
+        ghosty._task_board.clear()
+    def test_assign_valid_task(self):
+        result = ghosty.assign("Fix login bug", 3)
+        assert isinstance(result, str)
+        assert len(result) > 0
+        assert "Fix login bug" in result
+
+    def test_assign_stores_task(self):
+        ghosty.assign("fix login bug", 2, category="high")
+        assert "fix login bug" in ghosty._task_board
+        assert ghosty._task_board["fix login bug"]["hours"] == 2
+
+
+    def test_assign_progress_starts_at_zero(self):
+        ghosty.assign("New feature", 5, category="low")
+        assert ghosty._task_board["New feature"]["progress"] == 0
+
+    def test_assign_invalid_hours(self):
+        with pytest.raises(ValueError):
+            ghosty.assign("Bad task", -1)
+    def test_assign_invalid_task_name(self):
+        with pytest.raises(ValueError):
+            ghosty.assign("", 3)
+
+    def test_assign_invalid_category(self):
+        with pytest.raises(ValueError):
+            ghosty.assign("fix login bug", 2, category="urgent")
+
+class TestCheckIn:
+    def setup_method(self):
+        ghosty._task_board.clear()
+
+    def test_checkin_empty_board(self):
+        result = ghosty.check_in()
+        assert isinstance(result, str)
+        assert "No tasks" in result
+
+    def test_checkin_all_tasks(self):
+        ghosty.assign("Task A", 4)
+        ghosty.assign("Task B", 2, category="high")
+        result = ghosty.check_in()
+        assert "Task A" in result
+        assert "Task B" in result
+
+    def test_checkin_specific_task(self):
+        ghosty.assign("Fix bug", 3, category="critical")
+        result = ghosty.check_in("Fix bug")
+        assert "Fix bug" in result
+        assert "3" in result
+
+    def test_checkin_task_not_found(self):
+        with pytest.raises(KeyError):
+            ghosty.check_in("nonexistent task")
+
+    def test_checkin_shows_zero_progress(self):
+        ghosty.assign("Do work", 10)
+        result = ghosty.check_in("Do work")
+        assert "0%" in result

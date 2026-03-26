@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ghosty"
+description = "A ghost teammate bot that pretends to work but does absolutely nothing."
+version = "0.0.1"                                    
+authors = [
+  { name="Roger", email="xl5199@nyu.edu" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+keywords = ["ghost", "ghost teammate", "bot", "humor"]
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: OS Independent",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.urls]
+"Homepage" = "https://github.com/swe-students-spring2026/3-package-blue_whale"
+"Repository" = "https://github.com/swe-students-spring2026/3-package-blue_whale.git"
+"Bug Tracker" = "https://github.com/swe-students-spring2026/3-package-blue_whale/issues"
+
+[project.scripts]
+ghosty = "ghosty.__main__:main"                         
+
+[tool.setuptools.packages.find]
+where = ["src"]                                       

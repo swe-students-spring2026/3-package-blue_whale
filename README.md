@@ -1,3 +1,31 @@
 # Python Package Exercise
 
-An exercise to create a Python package, build it, test it, distribute it, and use it. See [instructions](./instructions.md) for details.
+> Ghosty: Your Ghost Teammate Bot
+
+## Description
+
+## Installation
+
+## Usage
+
+### `greet()`
+
+### `assign()`
+
+### `check_in()`
+
+### `nudge()`
+
+### `excuse()`
+
+## Example Program
+
+## Contributing
+
+### Setup
+
+### Running Tests
+
+### Building the Package
+
+## Team

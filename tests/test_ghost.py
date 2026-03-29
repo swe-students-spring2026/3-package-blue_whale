@@ -61,3 +61,42 @@ class TestCheckIn:
         ghosty.assign("Do work", 10)
         result = ghosty.check_in("Do work")
         assert "0%" in result
+
+class TestExcuse:
+    def test_excuse_high_seriousness(self):
+        result= ghosty.excuse("my laptop ran away", "high")
+
+        assert isinstance(result, str)
+        assert "my laptop ran away" in result
+        assert "critical" in result
+    def test_excuse_medium_seriousness(self):
+        result = ghosty.excuse("wifi stopped believing in me", "medium")
+
+        assert isinstance(result, str)
+        assert "wifi stopped believing in me" in result
+        assert "emotionally" in result
+    
+    def test_excuse_low_seriousness(self):
+        result = ghosty.excuse("too comfy", "low")
+        
+        assert isinstance(result, str)
+        assert "too comfy" in result
+        assert "nothing" in result
+    
+    def test_excuse_default_seriousness(self):
+        result = ghosty.excuse("got lost vibing")
+        
+        assert isinstance(result, str)
+        assert "got lost vibing" in result
+        assert "emotionally" in result
+    
+    def test_excuse_invalid_reason(self):
+        with pytest.raises(ValueError):
+            ghosty.excuse("", "high")
+    
+    def test_excuse_invalid_seriousness(self):
+        with pytest.raises(ValueError):
+            ghosty.excuse("sick", "urgent")
+    
+
+

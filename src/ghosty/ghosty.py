@@ -60,3 +60,36 @@ def check_in(task_name=None):
         )
     
     return "\n".join(lines)
+
+def excuse(reason, seriousness="medium"):
+    """Return a playful excuse message."""
+    if not isinstance(reason,str) or len(reason.strip())==0:
+        raise ValueError("Reason must be a non-empty string.")
+    
+    valid_levels = ["low","medium", "high"]
+
+    if seriousness not in valid_levels:
+        raise ValueError(f"Seriousness must be one of {valid_levels}")
+    
+    reason = reason.strip()
+
+    if seriousness == "high":
+        return(
+            f"Ghosty's excuse:\n"
+            f"{reason}\n"
+            "This was clearly a critical situation.\n"
+            "Expecting productivity would be unrealistic."
+        )
+    elif seriousness == "medium":
+        return(
+            f"Ghosty's excuse:\n"
+            f"{reason}\n"
+            "Ghosty planned to start working... emotionally"
+        )
+    else:
+        return(
+            f"Ghosty's excuse:\n"
+            f"{reason}\n"
+            "Ghosty apologizes and promises absolutely nothing."
+        )
+

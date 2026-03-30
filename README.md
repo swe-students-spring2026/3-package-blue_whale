@@ -2,7 +2,7 @@
 
 > ## Ghosty: Your Ghost Teammate Bot
 
-![Build Status](https://github.com/swe-students-spring2026/3-package-blue_whale/actions/workflows/event-logger.yml/badge.svg)
+![Build Status](https://github.com/swe-students-spring2026/3-package-blue_whale/actions/workflows/build.yaml/badge.svg)
 
 **PyPI:** _coming soon_
 

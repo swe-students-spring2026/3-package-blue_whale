@@ -3,8 +3,7 @@
 > ## Ghosty: Your Ghost Teammate Bot
 
 ![Build Status](https://github.com/swe-students-spring2026/3-package-blue_whale/actions/workflows/build.yaml/badge.svg)
-
-**PyPI:** _coming soon_
+[![PyPI version](https://badge.fury.io/py/ghosty-teammate.svg)](https://pypi.org/project/ghosty-teammate/)
 
 Ghosty is a Python package that simulates a ghost teammate — the kind who gets assigned tasks, never does anything, and always has an excuse. Install it, assign Ghosty some work, and watch absolutely nothing happen.
 
@@ -13,7 +12,7 @@ Ghosty is a Python package that simulates a ghost teammate — the kind who gets
 ## Installation
 
 ```bash
-pip install ghosty
+pip install ghosty-teammate
 ```
 
 ---
@@ -68,7 +67,7 @@ Ask Ghosty to justify why no progress has been made.
 - `seriousness` (str): How serious the excuse is — `"low"`, `"medium"`, or `"high"`. Default: `"medium"`
 
 ```python
-ghosty.excuse("my cat sat on my keyboard", seriousness="medium")
+ghosty.excuse("my cat sat on my keyboard", seriousness="medium"))
 ghosty.excuse("the wifi stopped believing in me", seriousness="high")
 ```
 

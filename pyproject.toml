@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ghosty"
+name = "ghosty_teammate"
 description = "A ghost teammate bot that pretends to work but does absolutely nothing."
-version = "0.0.1"                                    
+version = "0.0.2"                                    
 authors = [
   { name="Roger", email="xl5199@nyu.edu" },
 ]

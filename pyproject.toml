@@ -3,9 +3,9 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ghosty-teammate"
+name = "ghosty_teammate"
 description = "A ghost teammate bot that pretends to work but does absolutely nothing."
-version = "0.0.3"                                    
+version = "0.0.3"
 authors = [
   { name="Celia Liang", email="cl7093@nyu.edu" },
   { name="Mumu Li", email="ml9389@nyu.edu" },
@@ -33,7 +33,7 @@ dev = ["pytest"]
 "Bug Tracker" = "https://github.com/swe-students-spring2026/3-package-blue_whale/issues"
 
 [project.scripts]
-ghosty = "ghosty.__main__:main"                         
+ghosty = "ghosty.__main__:main"
 
 [tool.setuptools.packages.find]
-where = ["src"]                                       
+where = ["src"]

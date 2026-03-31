@@ -227,7 +227,7 @@ def check_in(task_name=None, include_completed=False):
             f"   Category : {task['category']}\n"
             f"   Progress : {task['progress']}%\n"
             f"   Remaining: {remaining:.1f} hrs\n"
-            f"   Status   : {'Nudged' if task['nudged'] else 'Ghosty hasn\'t started yet'}\n"
+            f"   Status   : {'Nudged' if task['nudged'] else 'Ghosty hasnt started yet'}\n"
             f"   Mood     : {'ANGRY' if task['angry'] else 'Calm'}\n"
             f"   Angry Count: {task['angry_count']}\n"
         )

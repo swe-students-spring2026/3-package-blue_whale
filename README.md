@@ -64,14 +64,26 @@ ghosty.check_in("Fix login bug")               # view one task
 ghosty.check_in(include_completed=True)        # include completed tasks
 ```
 
-### `nudge(task_name)`
+### `nudge(task_name, scold=False, tired=False)`
 
-Nudge Ghosty on a specific task. Each nudge increases progress by 20%. Without a nudge, nothing will ever happen.
+Nudge Ghosty on a specific task. Each regular nudge increases progress by 20%; with scolding, the progress is increased by 30%; with tiredness, it increases 10% only. If it possible that Ghosty would get slack once the progress is over 60%. It would also become angry if you nudge and scold it more than 3 times, or nudge and scold it when it is tired. Without a nudge, nothing will ever happen.
 
 - `task_name` (str): Name of the task to nudge
+- `scold` (bool): Whether or not if you want to push and scold Ghosty for work
+- `tired` (bool): Whether or not if Ghosty is tired
 
 ```python
 ghosty.nudge("Fix login bug")
+```
+
+### `IAmSorry(task_name)
+
+A function that lets you say sorry to Ghosty. If ghosty is angry, it wuld get back to work after you say sorry. If it is not angry, it would consider you a weirdo.
+
+- `task_name` (str): Name of the task
+
+```python
+ghosty.IAmSorry("Fix login bug")
 ```
 
 ### `excuse(reason, seriousness="medium")`

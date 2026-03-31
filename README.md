@@ -5,6 +5,8 @@
 ![Build Status](https://github.com/swe-students-spring2026/3-package-blue_whale/actions/workflows/build.yaml/badge.svg)
 [![PyPI version](https://badge.fury.io/py/ghosty-teammate.svg)](https://pypi.org/project/ghosty-teammate/)
 
+**PyPI Project Page:** https://pypi.org/project/ghosty-teammate/
+
 Ghosty is a Python package that simulates a ghost teammate — the kind who gets assigned tasks, never does anything, and always has an excuse. Install it, assign Ghosty some work, and watch absolutely nothing happen.
 
 ---
@@ -21,7 +23,7 @@ pip install ghosty-teammate
 
 ### `greet()`
 
-Ghosty greets you (or doesn't, depending on the mood).
+Ghosty greets the team with a fixed message of encouragement.
 
 ```python
 from ghosty import ghosty
@@ -51,9 +53,11 @@ ghosty.check_in()                  # view all tasks
 ghosty.check_in("Fix login bug")   # view one task
 ```
 
-### `nudge()`
+### `nudge(task_name)`
 
-Nudge Ghosty to actually do something. Without a nudge, nothing will ever happen.
+Nudge Ghosty on a specific task. Each nudge increases progress by 20%. Without a nudge, nothing will ever happen.
+
+- `task_name` (str): Name of the task to nudge
 
 ```python
 ghosty.nudge("Fix login bug")
@@ -67,7 +71,7 @@ Ask Ghosty to justify why no progress has been made.
 - `seriousness` (str): How serious the excuse is — `"low"`, `"medium"`, or `"high"`. Default: `"medium"`
 
 ```python
-ghosty.excuse("my cat sat on my keyboard", seriousness="medium"))
+ghosty.excuse("my cat sat on my keyboard", seriousness="medium")
 ghosty.excuse("the wifi stopped believing in me", seriousness="high")
 ```
 
@@ -107,6 +111,12 @@ pipenv run pytest
 ```bash
 pipenv run python -m build
 ```
+
+---
+
+## Configuration
+
+This project does not use any secret configuration files such as `.env` or similar files. No additional configuration is required to run or contribute to this project.
 
 ---
 

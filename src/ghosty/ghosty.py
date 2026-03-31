@@ -81,41 +81,117 @@ def assign(task_name, hours, category="medium"):
     _task_board[task_name] = {
         "hours": hours,
         "category": category,
-        "progress": 0,      
-        "nudged": False
+        "progress": 0,
+        "nudged": False,
+        "angry": False,
+        "angry_count": 0
     }
     
     return (
         f"Task '{task_name}' (Priority: {category}, {hours}hrs) assigned to Ghosty.\n"
-        f"Ghosty has been notified... just kidding, Ghosty doesn't check Slack."
+        f"Ghosty has been notified... just kidding, Ghosty doesn't check Slack.\n"
     )
 
 
-def nudge(task_name):
+def IAmSorry(task_name):
+        if task_name not in _task_board:
+            raise KeyError(f"Task '{task_name}' not found on the board.")
+
+        if not isinstance(task_name, str) or len(task_name.strip()) == 0:
+            raise ValueError("Task name must be a non-empty string.")
+
+        task = _task_board[task_name]
+
+        if not task["angry"]:
+            return "Ghosty thinks you are weird. No need to apologize for scolding it. It is not angry yet!\n"
+        else:
+            task["angry"] = False
+            task["angry_count"] = 0
+            return (
+                f"Ghosty accepts your apology for scolding it about '{task_name}'.\n"
+                "It is no longer angry and will work on the task again.\n"
+                f"Progress remains at {task['progress']}%.\n"
+            )
+
+def nudge(task_name, scold=False, tired=False):
     """Nudge Ghosty on a task; progress increases a little each time."""
-    if not isinstance(task_name, str) or len(task_name.strip()) == 0:
-        raise ValueError("Task name must be a non-empty string.")
 
     if task_name not in _task_board:
         raise KeyError(f"Task '{task_name}' not found on the board.")
+    
+    if not isinstance(task_name, str) or len(task_name.strip()) == 0:
+        raise ValueError("Task name must be a non-empty string.")
+    
+    if not isinstance(scold, bool) or not isinstance(tired, bool):
+        raise ValueError("Scold and tired parameters must be boolean values.")
 
     task = _task_board[task_name]
     task["nudged"] = True
 
+    if scold:
+        task["angry_count"] += 1
+    
+    
+    if task["angry"]:
+        return (
+            f"Ghosty is still ANGRY about '{task_name}' and refuses to work.\n"
+            f"You need to say sorry to Ghosty!\n"
+            f"Progress remains at {task['progress']}%.\n"
+        )
+    else:
+        if task["angry_count"] >= 3:
+            task["angry"] = True
+            return (
+                f"Ghosty has been scolded about '{task_name}' too many times. It is now ANGRY!\n"
+                f"It now refuses to work. Tell it you do not mean it and you won't do this again!\n"
+                f"Progress remains at {task['progress']}%.\n"
+            )
+        elif tired and scold:
+            task["angry"] = True
+            return (
+                f"Ghosty is tired but gets scolded about ‘{task_name}’. It is now ANGRY!\n"
+                f"It now refuses to work. Tell it you do not mean it and you won't do this again!\n"
+                f"Progress remains at {task['progress']}%.\n"
+            )
+
     previous_progress = task["progress"]
-    task["progress"] = min(100, previous_progress + 20)
+    if scold:
+        task["progress"] = min(100, previous_progress + 30)
+    elif tired:
+        task["progress"] = min(100, previous_progress + 10)
+    else:
+        task["progress"] = min(100, previous_progress + 20)
 
     if task["progress"] == 100:
         return (
             f"Ghosty was nudged about '{task_name}'.\n"
-            "Miraculously, the task is now complete (100%)."
+            "Miraculously, the task is now complete (100%).\n"
+        )
+    
+    if previous_progress >= 60 and scold==True:
+        return (
+            f"Lazy Ghosty gets scolded about '{task_name}'. It is now working!'\n"
+            f"Progress moved from {previous_progress}% to {task['progress']}%.\n"
+        )
+    elif previous_progress >= 60 and (random.getrandbits(1)==1):
+        task["progress"] = previous_progress
+        return (
+            f"Lazy Ghosty doesn't want to work on '{task_name}'.\n"
+            "You might want to push it working. Go scolding it!\n"
         )
 
-    return (
-        f"Ghosty was nudged about '{task_name}'.\n"
-        f"Progress moved from {previous_progress}% to {task['progress']}%."
-    )
 
+    if scold:
+        prefix = f"Ghosty was scolded about '{task_name}'. It works faster now.\n"
+    elif tired:
+        prefix = f"Ghosty was tired but got nudged about '{task_name}'. It is still working but works slower now.\n"
+    else:
+        prefix = f"Ghosty was nudged about '{task_name}'.\n"
+
+    return (
+        prefix +
+        f"Progress moved from {previous_progress}% to {task['progress']}%.\n"
+    )
 
 def remove_task(task_name):
     """Remove a single task from the board."""
@@ -151,7 +227,9 @@ def check_in(task_name=None, include_completed=False):
             f"   Category : {task['category']}\n"
             f"   Progress : {task['progress']}%\n"
             f"   Remaining: {remaining:.1f} hrs\n"
-            f"   Status   : {'Nudged' if task['nudged'] else 'Ghosty hasnt started yet'}"
+            f"   Status   : {'Nudged' if task['nudged'] else 'Ghosty hasn\'t started yet'}\n"
+            f"   Mood     : {'ANGRY' if task['angry'] else 'Calm'}\n"
+            f"   Angry Count: {task['angry_count']}\n"
         )
     
     if len(_task_board) == 0:
@@ -166,7 +244,6 @@ def check_in(task_name=None, include_completed=False):
     if len(board_items) == 0:
         return "No active tasks on the board. Use include_completed=True to view finished tasks."
 
-    
     lines = ["Ghosty's Task Board\n"]
     lines.append(f"{'Task':<20} {'Category':<15} {'Progress':<10} {'Remaining':<10}")
     lines.append("-" * 55)

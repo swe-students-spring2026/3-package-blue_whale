@@ -1,5 +1,6 @@
 import pytest
 from ghosty import ghosty
+from unittest.mock import patch
 
 class TestAssign:
     def setup_method(self):
@@ -64,7 +65,7 @@ class TestCheckIn:
 
     def test_checkin_hides_completed_tasks_by_default(self):
         ghosty.assign("Done task", 1)
-        for _ in range(5):
+        while ghosty._task_board["Done task"]["progress"] < 100:
             ghosty.nudge("Done task")
 
         result = ghosty.check_in()
@@ -72,7 +73,7 @@ class TestCheckIn:
 
     def test_checkin_can_include_completed_tasks(self):
         ghosty.assign("Done task", 1)
-        for _ in range(5):
+        while ghosty._task_board["Done task"]["progress"] < 100:
             ghosty.nudge("Done task")
 
         result = ghosty.check_in(include_completed=True)
@@ -171,7 +172,7 @@ class TestNudge:
 
     def test_nudge_caps_progress_at_hundred(self):
         ghosty.assign("Do everything", 5)
-        for _ in range(6):
+        while ghosty._task_board["Do everything"]["progress"] < 100:
             ghosty.nudge("Do everything")
 
         assert ghosty._task_board["Do everything"]["progress"] == 100
@@ -181,9 +182,100 @@ class TestNudge:
             ghosty.nudge("nonexistent task")
 
     def test_nudge_invalid_task_name(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(KeyError):
             ghosty.nudge("")
 
+    def test_nudge_invalid_scold_val(self):
+        with pytest.raises(KeyError):
+            ghosty.nudge("A task", scold = "Yesterday")
+    
+    def test_nudge_invalid_tired_val(self):
+        with pytest.raises(KeyError):
+            ghosty.nudge("Today's task", scold = True, tired="Maybe")
+
+    def test_nudge_causing_angry_tired_and_scold(self):
+        ghosty.assign("Hard task", 4)
+        ghosty.nudge("Hard task", scold=True, tired=True)
+
+        assert ghosty._task_board["Hard task"]["angry"] is True
+
+    def test_nudge_causing_angry_overly_scolding(self):
+        ghosty.assign("Hard task", 4)
+        ghosty.nudge("Hard task", scold=True)
+        ghosty.nudge("Hard task", scold=True)
+        ghosty.nudge("Hard task", scold=True)
+
+        assert ghosty._task_board["Hard task"]["angry"] is True
+    
+    def test_nudge_when_already_angry(self):
+        ghosty.assign("Task", 4)
+        for _ in range(3):
+            ghosty.nudge("Task", scold=True)
+
+        result = ghosty.nudge("Task")
+
+        assert "still ANGRY" in result
+    
+    def test_angry_does_not_change_progress(self):
+        ghosty.assign("Task", 4)
+
+        for _ in range(3):
+            ghosty.nudge("Task", scold=True)
+
+        before = ghosty._task_board["Task"]["progress"]
+
+        ghosty.nudge("Task")
+
+        after = ghosty._task_board["Task"]["progress"]
+
+        assert before == after
+    
+    def test_over_sixty_random_not_working(self):
+        ghosty.assign("Task", 4)
+
+        ghosty.nudge("Task", scold=True)
+        ghosty.nudge("Task", scold=True)
+
+        with patch("random.getrandbits", return_value=1):
+            result = ghosty.nudge("Task", scold=False)
+
+        assert "doesn't want to work" in result
+
+    def test_over_sixty_and_scold(self):
+        ghosty.assign("Hard task", 4)
+        ghosty.nudge("Hard task")
+        ghosty.nudge("Hard task")
+        ghosty.nudge("Hard task")
+        ghosty.nudge("Hard task", scold=True)
+
+        assert ghosty._task_board["Hard task"]["progress"] == 90
+    
+    def test_tired(self):
+        ghosty.assign("Hard task", 4)
+        ghosty.nudge("Hard task", tired=True)
+
+        assert ghosty._task_board["Hard task"]["progress"] == 10
+    
+    def test_scold(self):
+        ghosty.assign("Hard task", 4)
+        ghosty.nudge("Hard task", scold=True)
+
+        assert ghosty._task_board["Hard task"]["progress"] == 30
+    
+    def test_random_no_progress_change(self):
+        ghosty.assign("Task", 4)
+
+        ghosty.nudge("Task", scold=True)
+        ghosty.nudge("Task", scold=True)
+
+        before = ghosty._task_board["Task"]["progress"]
+
+        with patch("random.getrandbits", return_value=1):
+            ghosty.nudge("Task", scold=False)
+
+        after = ghosty._task_board["Task"]["progress"]
+
+        assert before == after
 
 class TestTaskHelpers:
     def setup_method(self):
@@ -208,7 +300,8 @@ class TestTaskHelpers:
     def test_clear_completed_removes_only_completed_tasks(self):
         ghosty.assign("Done task", 1)
         ghosty.assign("Active task", 2)
-        for _ in range(5):
+
+        while ghosty._task_board["Done task"]["progress"] < 100:
             ghosty.nudge("Done task")
 
         result = ghosty.clear_completed()

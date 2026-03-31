@@ -29,6 +29,10 @@ def main():
     print()
 
     print(ghosty.nudge("Fix login bug"))
+    print(ghosty.nudge("Fix login bug", scold=True))
+    print(ghosty.nudge("Write documentation", scold=True, tired=True))
+    print(ghosty.IAmSorry("Write documentation"))
+    print(ghosty.nudge("Write documentation", scold=False, tired=True))
     print()
 
     # Check a specific task after nudge

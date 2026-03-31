@@ -31,6 +31,7 @@ def main():
     print(ghosty.check_in())
     print()
 
+    # Nudge with different styles
     print(ghosty.nudge("Fix login bug"))
     print(ghosty.nudge("Fix login bug", scold=True))
     print(ghosty.nudge("Write documentation", scold=True, tired=True))
@@ -40,6 +41,23 @@ def main():
 
     # Check a specific task after nudge
     print(ghosty.check_in("Fix login bug"))
+    print()
+
+    # Nudge Fix login bug to completion (already at 50%, need 3 more regular nudges)
+    for _ in range(3):
+        print(ghosty.nudge("Fix login bug"))
+    print()
+
+    # Clear completed tasks
+    print(ghosty.clear_completed())
+    print()
+
+    # Check board after clearing
+    print(ghosty.check_in())
+    print()
+
+    # Remove a task
+    print(ghosty.remove_task("Write documentation"))
     print()
 
     # Ask for an excuse

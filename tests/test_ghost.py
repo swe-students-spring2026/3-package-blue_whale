@@ -97,6 +97,41 @@ class TestExcuse:
     def test_excuse_invalid_seriousness(self):
         with pytest.raises(ValueError):
             ghosty.excuse("sick", "urgent")
+
+
+class TestGreet:
+    def test_greet_returns_non_empty_string(self):
+        result = ghosty.greet()
+        assert isinstance(result, str)
+        assert len(result) > 0
+
+
+class TestNudge:
+    def setup_method(self):
+        ghosty._task_board.clear()
+
+    def test_nudge_updates_progress(self):
+        ghosty.assign("Fix login bug", 3)
+        result = ghosty.nudge("Fix login bug")
+
+        assert isinstance(result, str)
+        assert ghosty._task_board["Fix login bug"]["progress"] == 20
+        assert ghosty._task_board["Fix login bug"]["nudged"] is True
+
+    def test_nudge_caps_progress_at_hundred(self):
+        ghosty.assign("Do everything", 5)
+        for _ in range(6):
+            ghosty.nudge("Do everything")
+
+        assert ghosty._task_board["Do everything"]["progress"] == 100
+
+    def test_nudge_missing_task(self):
+        with pytest.raises(KeyError):
+            ghosty.nudge("nonexistent task")
+
+    def test_nudge_invalid_task_name(self):
+        with pytest.raises(ValueError):
+            ghosty.nudge("")
     
 
 

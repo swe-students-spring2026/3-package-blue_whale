@@ -11,7 +11,8 @@ def main():
     print("=" * 50)
     print()
 
-    # TODO: greet() - waiting for Mumu
+    print(ghosty.greet())
+    print()
 
     # Assign some tasks
     print(ghosty.assign("Fix login bug", 3, category="high"))
@@ -25,7 +26,8 @@ def main():
     print(ghosty.check_in())
     print()
 
-    # TODO: nudge()
+    print(ghosty.nudge("Fix login bug"))
+    print()
 
     # Check a specific task after nudge
     print(ghosty.check_in("Fix login bug"))

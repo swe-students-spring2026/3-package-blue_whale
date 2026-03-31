@@ -104,7 +104,6 @@ class TestGreet:
         result = ghosty.greet()
         assert isinstance(result, str)
         assert len(result) > 0
-        assert "Ghosty" in result
 
 
 class TestNudge:

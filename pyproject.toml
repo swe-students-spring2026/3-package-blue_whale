@@ -7,11 +7,7 @@ name = "ghosty_teammate"
 description = "A ghost teammate bot that pretends to work but does absolutely nothing."
 version = "0.0.7"
 authors = [
-  { name="Celia Liang", email="cl7093@nyu.edu" },
-  { name="Mumu Li", email="ml9389@nyu.edu" },
-  { name="Xiongfeng Li", email="xl5199@nyu.edu" },
-  { name="Meili Liang", email="ml8397@nyu.edu" },
-  { name="Hanxi Li", email="hl5445@nyu.edu" },
+  { name="Roger", email="xl5199@nyu.edu" },
 ]
 license = { file = "LICENSE" }
 readme = "README.md"
@@ -33,7 +29,7 @@ dev = ["pytest"]
 "Bug Tracker" = "https://github.com/swe-students-spring2026/3-package-blue_whale/issues"
 
 [project.scripts]
-ghosty = "ghosty.__main__:main"
+ghosty = "ghosty.__main__:main"                         
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["src"]                                       

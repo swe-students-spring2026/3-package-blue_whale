@@ -105,6 +105,31 @@ class TestGreet:
         assert isinstance(result, str)
         assert len(result) > 0
 
+    def test_greet_supports_catch_up_intent(self):
+        result = ghosty.greet(presence="reappearing", intent="catch_up")
+        assert "Ghosty" in result
+        assert "catching up" in result
+
+    def test_greet_supports_ask_about_teammate_intent(self):
+        result = ghosty.greet(presence="active", intent="ask_about_teammate", teammate="Celia's section")
+        assert "Celia" in result
+
+    def test_greet_supports_promise_progress_with_blocker(self):
+        result = ghosty.greet(intent="promise_progress", blocker="login bugs")
+        assert "login bugs" in result
+
+    def test_greet_invalid_presence(self):
+        with pytest.raises(ValueError):
+            ghosty.greet(presence="invisible")
+
+    def test_greet_invalid_intent(self):
+        with pytest.raises(ValueError):
+            ghosty.greet(intent="random_vibes")
+
+    def test_greet_invalid_teammate(self):
+        with pytest.raises(ValueError):
+            ghosty.greet(intent="ask_about_teammate", teammate="")
+
 
 class TestNudge:
     def setup_method(self):

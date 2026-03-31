@@ -117,7 +117,29 @@ def nudge(task_name):
     )
 
 
-def check_in(task_name=None):
+def remove_task(task_name):
+    """Remove a single task from the board."""
+    if not isinstance(task_name, str) or len(task_name.strip()) == 0:
+        raise ValueError("Task name must be a non-empty string.")
+
+    if task_name not in _task_board:
+        raise KeyError(f"Task '{task_name}' not found on the board.")
+
+    del _task_board[task_name]
+    return f"Task '{task_name}' was removed from Ghosty's board."
+
+
+def clear_completed():
+    """Remove all tasks that have reached 100% progress."""
+    completed_tasks = [name for name, task in _task_board.items() if task["progress"] >= 100]
+
+    for name in completed_tasks:
+        del _task_board[name]
+
+    return f"Cleared {len(completed_tasks)} completed task(s)."
+
+
+def check_in(task_name=None, include_completed=False):
     if task_name is not None:
         if task_name not in _task_board:
             raise KeyError(f"Task '{task_name}' not found on the board.")
@@ -135,12 +157,21 @@ def check_in(task_name=None):
     if len(_task_board) == 0:
         return "No tasks assigned yet. Ghosty is 'working on it'."
     
+    board_items = [
+        (name, task)
+        for name, task in _task_board.items()
+        if include_completed or task["progress"] < 100
+    ]
+
+    if len(board_items) == 0:
+        return "No active tasks on the board. Use include_completed=True to view finished tasks."
+
     
     lines = ["Ghosty's Task Board\n"]
     lines.append(f"{'Task':<20} {'Category':<15} {'Progress':<10} {'Remaining':<10}")
     lines.append("-" * 55)
     
-    for name, task in _task_board.items():
+    for name, task in board_items:
         remaining = task["hours"] * (1 - task["progress"] / 100)
         lines.append(
             f"{name:<20} {task['category']:<15} {task['progress']:<10}% {remaining:<10.1f}hrs"

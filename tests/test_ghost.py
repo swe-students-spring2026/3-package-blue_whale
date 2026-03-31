@@ -62,6 +62,22 @@ class TestCheckIn:
         result = ghosty.check_in("Do work")
         assert "0%" in result
 
+    def test_checkin_hides_completed_tasks_by_default(self):
+        ghosty.assign("Done task", 1)
+        for _ in range(5):
+            ghosty.nudge("Done task")
+
+        result = ghosty.check_in()
+        assert "No active tasks" in result
+
+    def test_checkin_can_include_completed_tasks(self):
+        ghosty.assign("Done task", 1)
+        for _ in range(5):
+            ghosty.nudge("Done task")
+
+        result = ghosty.check_in(include_completed=True)
+        assert "Done task" in result
+
 class TestExcuse:
     def test_excuse_high_seriousness(self):
         result= ghosty.excuse("my laptop ran away", "high")
@@ -167,6 +183,39 @@ class TestNudge:
     def test_nudge_invalid_task_name(self):
         with pytest.raises(ValueError):
             ghosty.nudge("")
+
+
+class TestTaskHelpers:
+    def setup_method(self):
+        ghosty._task_board.clear()
+
+    def test_remove_task_success(self):
+        ghosty.assign("Temp task", 2)
+
+        result = ghosty.remove_task("Temp task")
+
+        assert "removed" in result
+        assert "Temp task" not in ghosty._task_board
+
+    def test_remove_task_missing(self):
+        with pytest.raises(KeyError):
+            ghosty.remove_task("missing")
+
+    def test_remove_task_invalid_name(self):
+        with pytest.raises(ValueError):
+            ghosty.remove_task("")
+
+    def test_clear_completed_removes_only_completed_tasks(self):
+        ghosty.assign("Done task", 1)
+        ghosty.assign("Active task", 2)
+        for _ in range(5):
+            ghosty.nudge("Done task")
+
+        result = ghosty.clear_completed()
+
+        assert "Cleared 1" in result
+        assert "Done task" not in ghosty._task_board
+        assert "Active task" in ghosty._task_board
     
 
 

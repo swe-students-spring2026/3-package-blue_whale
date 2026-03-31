@@ -5,6 +5,11 @@ A bot that simulates a teammate who does absolutely nothing.
 
 _task_board = {}
 
+
+def greet():
+    """Return a greeting message from Ghosty."""
+    return "Hi! Love the direction this is going! Keep it up guys!"
+
 def assign(task_name, hours, category="medium"):
 
     if not isinstance(task_name, str) or len(task_name.strip()) == 0:
@@ -27,6 +32,32 @@ def assign(task_name, hours, category="medium"):
     return (
         f"Task '{task_name}' (Priority: {category}, {hours}hrs) assigned to Ghosty.\n"
         f"Ghosty has been notified... just kidding, Ghosty doesn't check Slack."
+    )
+
+
+def nudge(task_name):
+    """Nudge Ghosty on a task; progress increases a little each time."""
+    if not isinstance(task_name, str) or len(task_name.strip()) == 0:
+        raise ValueError("Task name must be a non-empty string.")
+
+    if task_name not in _task_board:
+        raise KeyError(f"Task '{task_name}' not found on the board.")
+
+    task = _task_board[task_name]
+    task["nudged"] = True
+
+    previous_progress = task["progress"]
+    task["progress"] = min(100, previous_progress + 20)
+
+    if task["progress"] == 100:
+        return (
+            f"Ghosty was nudged about '{task_name}'.\n"
+            "Miraculously, the task is now complete (100%)."
+        )
+
+    return (
+        f"Ghosty was nudged about '{task_name}'.\n"
+        f"Progress moved from {previous_progress}% to {task['progress']}%."
     )
 
 

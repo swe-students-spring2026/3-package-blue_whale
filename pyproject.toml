@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ghosty_teammate"
 description = "A ghost teammate bot that pretends to work but does absolutely nothing."
-version = "0.0.3"
+version = "0.0.7"
 authors = [
   { name="Celia Liang", email="cl7093@nyu.edu" },
   { name="Mumu Li", email="ml9389@nyu.edu" },

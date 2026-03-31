@@ -21,14 +21,21 @@ pip install ghosty-teammate
 
 ## Usage
 
-### `greet()`
+### `greet(presence=None, intent=None, teammate=None, blocker=None)`
 
-Ghosty greets the team with a fixed message of encouragement.
+Ghosty greets the team. All parameters are optional — calling with no arguments returns a random message.
+
+- `presence` (str): `"active"` or `"reappearing"` — affects the opening tone
+- `intent` (str): one of `"catch_up"`, `"ask_about_teammate"`, `"promise_progress"`, `"encourage"`, `"question_minor_detail"`
+- `teammate` (str): name to mention when intent is `"ask_about_teammate"`
+- `blocker` (str): blocker to mention when intent is `"promise_progress"`
 
 ```python
 from ghosty import ghosty
 
 ghosty.greet()
+ghosty.greet(presence="active", intent="ask_about_teammate", teammate="Alice")
+ghosty.greet(presence="reappearing", intent="promise_progress", blocker="a merge conflict")
 ```
 
 ### `assign(task_name, hours, category="medium")`
@@ -48,12 +55,13 @@ ghosty.assign("Write documentation", 2, category="low")
 
 View the task board. Pass a task name to see details on a specific task, or leave it empty to see everything.
 
-- `task_name` (str): Name of the task
-- `include_completed` (bool): whether to include completed tasks
+- `task_name` (str): Optional — name of a specific task to view
+- `include_completed` (bool): Whether to show completed tasks. Default: `False`
 
 ```python
-ghosty.check_in()                  # view all tasks
-ghosty.check_in("Fix login bug")   # view one task
+ghosty.check_in()                              # view all active tasks
+ghosty.check_in("Fix login bug")               # view one task
+ghosty.check_in(include_completed=True)        # include completed tasks
 ```
 
 ### `nudge(task_name, scold=False, tired=False)`
@@ -90,22 +98,22 @@ ghosty.excuse("my cat sat on my keyboard", seriousness="medium")
 ghosty.excuse("the wifi stopped believing in me", seriousness="high")
 ```
 
-### `remove_task(task_name)`:
+### `remove_task(task_name)`
 
-Remove a completed task.
+Remove a specific task from the board.
 
-- `task_name` (str): Name of the task
+- `task_name` (str): Name of the task to remove
 
 ```python
 ghosty.remove_task("Fix login bug")
 ```
 
-### `clear_completed()`:
+### `clear_completed()`
 
-Clear all completed tasks at once.
+Remove all tasks that have reached 100% progress.
 
 ```python
-ghosty.remove_task()
+ghosty.clear_completed()
 ```
 
 ---

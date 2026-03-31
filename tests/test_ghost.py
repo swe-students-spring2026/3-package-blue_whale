@@ -121,6 +121,7 @@ class TestGreet:
         result = ghosty.greet()
         options = [
             "Hey! Just catching up on the thread now. What did I miss?",
+            "How is your part coming along? Looking great so far!",
             "Morning! How is your part coming along? Looking great so far!",
             "Just grabbing coffee and then diving deep into my task. Update soon.",
             "Love the direction this is going. Keep it up, team!",

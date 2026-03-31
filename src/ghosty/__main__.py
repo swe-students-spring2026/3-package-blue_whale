@@ -2,7 +2,10 @@
 ghosty - Example Program
 Run with: python -m ghosty
 """
-from ghosty import ghosty
+try:
+    from . import ghosty
+except ImportError:
+    import ghosty
 
 
 def main():

@@ -18,13 +18,21 @@ def greet(presence=None, intent=None, teammate=None, blocker=None):
         "encourage",
         "question_minor_detail",
     ]
+    templates = {
+        "catch_up": "Just catching up on the thread now, what did I miss?",
+        "ask_about_teammate": "How is {teammate_name} coming along? Looking great so far!",
+        "promise_progress": "Just grabbing coffee and then diving deep into my task. Update soon.",
+        "encourage": "Love the direction this is going. Keep it up, team!",
+        "question_minor_detail": "Do we think we should tweak that minor detail before we ship?",
+        "promise_progress_with_blocker": "Currently fighting with {blocker}, will post when I clear it.",
+    }
 
     if presence is None and intent is None and teammate is None and blocker is None:
         return random.choice([
-            "Hey! Just catching up on the thread now. What did I miss?",
-            "Morning! How is your part coming along? Looking great so far!",
-            "Just grabbing coffee and then diving deep into my task. Update soon.",
-            "Love the direction this is going. Keep it up, team!",
+            f"Hey! {templates['catch_up'].replace(', what', '. What')}",
+            templates["ask_about_teammate"].format(teammate_name="your part"),
+            templates["promise_progress"],
+            templates["encourage"],
         ])
 
     if presence is None:
@@ -50,19 +58,12 @@ def greet(presence=None, intent=None, teammate=None, blocker=None):
 
     teammate_name = teammate.strip() if isinstance(teammate, str) else "your part"
 
-    if intent == "catch_up":
-        follow_up = "Just catching up on the thread now, what did I miss?"
-    elif intent == "ask_about_teammate":
-        follow_up = f"How is {teammate_name} coming along? Looking great so far!"
-    elif intent == "promise_progress":
-        if blocker is not None:
-            follow_up = f"Currently fighting with {blocker}, will post when I clear it."
-        else:
-            follow_up = "Just grabbing coffee and then diving deep into my task. Update soon."
-    elif intent == "question_minor_detail":
-        follow_up = "Do we think we should tweak that minor detail before we ship?"
+    if intent == "ask_about_teammate":
+        follow_up = templates[intent].format(teammate_name=teammate_name)
+    elif intent == "promise_progress" and blocker is not None:
+        follow_up = templates["promise_progress_with_blocker"].format(blocker=blocker)
     else:
-        follow_up = "Love the direction this is going. Keep it up, team!"
+        follow_up = templates[intent]
 
     return f"{opener} {follow_up}"
 

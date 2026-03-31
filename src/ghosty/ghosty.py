@@ -3,12 +3,68 @@ ghosty.py - The Ghost Teammate Bot
 A bot that simulates a teammate who does absolutely nothing.
 """
 
+import random
+
 _task_board = {}
 
 
-def greet():
-    """Return a greeting message from Ghosty."""
-    return "Hi! Love the direction this is going! Keep it up guys!"
+def greet(presence=None, intent=None, teammate=None, blocker=None):
+    """Return a Ghosty greeting from the greeter's perspective."""
+    valid_presence = ["reappearing", "active"]
+    valid_intents = [
+        "catch_up",
+        "ask_about_teammate",
+        "promise_progress",
+        "encourage",
+        "question_minor_detail",
+    ]
+
+    if presence is None and intent is None and teammate is None and blocker is None:
+        return random.choice([
+            "Hey! Just catching up on the thread now. What did I miss?",
+            "Morning! How is your part coming along? Looking great so far!",
+            "Just grabbing coffee and then diving deep into my task. Update soon.",
+            "Love the direction this is going. Keep it up, team!",
+        ])
+
+    if presence is None:
+        presence = "active"
+    if intent is None:
+        intent = "encourage"
+
+    if presence not in valid_presence:
+        raise ValueError(f"Presence must be one of {valid_presence}")
+    if intent not in valid_intents:
+        raise ValueError(f"Intent must be one of {valid_intents}")
+
+    if teammate is not None and (not isinstance(teammate, str) or len(teammate.strip()) == 0):
+        raise ValueError("Teammate must be a non-empty string when provided.")
+    if blocker is not None and (not isinstance(blocker, str) or len(blocker.strip()) == 0):
+        raise ValueError("Blocker must be a non-empty string when provided.")
+
+    opener = (
+        "Ghosty says: Sorry for the radio silence."
+        if presence == "reappearing"
+        else "Ghosty says: Morning team!"
+    )
+
+    teammate_name = teammate.strip() if isinstance(teammate, str) else "your part"
+
+    if intent == "catch_up":
+        follow_up = "Just catching up on the thread now, what did I miss?"
+    elif intent == "ask_about_teammate":
+        follow_up = f"How is {teammate_name} coming along? Looking great so far!"
+    elif intent == "promise_progress":
+        if blocker is not None:
+            follow_up = f"Currently fighting with {blocker}, will post when I clear it."
+        else:
+            follow_up = "Just grabbing coffee and then diving deep into my task. Update soon."
+    elif intent == "question_minor_detail":
+        follow_up = "Do we think we should tweak that minor detail before we ship?"
+    else:
+        follow_up = "Love the direction this is going. Keep it up, team!"
+
+    return f"{opener} {follow_up}"
 
 def assign(task_name, hours, category="medium"):
 

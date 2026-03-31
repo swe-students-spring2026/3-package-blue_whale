@@ -13,6 +13,8 @@ def main():
 
     print(ghosty.greet())
     print()
+    print(ghosty.greet(presence="active", intent="ask_about_teammate", teammate="Celia's section"))
+    print()
 
     # Assign some tasks
     print(ghosty.assign("Fix login bug", 3, category="high"))

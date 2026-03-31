@@ -11,7 +11,7 @@ def main():
     print("=" * 50)
     print()
 
-    print(ghosty.greet(presence="active", intent="encourage"))
+    print(ghosty.greet())
     print()
     print(ghosty.greet(presence="active", intent="ask_about_teammate", teammate="Celia's section"))
     print()

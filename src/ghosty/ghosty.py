@@ -3,10 +3,12 @@ ghosty.py - The Ghost Teammate Bot
 A bot that simulates a teammate who does absolutely nothing.
 """
 
+import random
+
 _task_board = {}
 
 
-def greet(presence="reappearing", intent="encourage", teammate=None, blocker=None):
+def greet(presence=None, intent=None, teammate=None, blocker=None):
     """Return a Ghosty greeting from the greeter's perspective."""
     valid_presence = ["reappearing", "active"]
     valid_intents = [
@@ -16,6 +18,19 @@ def greet(presence="reappearing", intent="encourage", teammate=None, blocker=Non
         "encourage",
         "question_minor_detail",
     ]
+
+    if presence is None and intent is None and teammate is None and blocker is None:
+        return random.choice([
+            "Hey! Just catching up on the thread now. What did I miss?",
+            "Morning! How is your part coming along? Looking great so far!",
+            "Just grabbing coffee and then diving deep into my task. Update soon.",
+            "Love the direction this is going. Keep it up, team!",
+        ])
+
+    if presence is None:
+        presence = "active"
+    if intent is None:
+        intent = "encourage"
 
     if presence not in valid_presence:
         raise ValueError(f"Presence must be one of {valid_presence}")

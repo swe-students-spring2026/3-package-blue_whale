@@ -100,6 +100,16 @@ class TestExcuse:
 
 
 class TestGreet:
+    def test_greet_without_arguments_returns_known_random_message(self):
+        result = ghosty.greet()
+        options = [
+            "Ghosty says: Hey! Just catching up on the thread now. What did I miss?",
+            "Ghosty says: Morning! How is your part coming along? Looking great so far!",
+            "Ghosty says: Just grabbing coffee and then diving deep into my task. Update soon.",
+            "Ghosty says: Love the direction this is going. Keep it up, team!",
+        ]
+        assert result in options
+
     def test_greet_returns_non_empty_string(self):
         result = ghosty.greet()
         assert isinstance(result, str)
